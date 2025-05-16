@@ -6,9 +6,9 @@
 
 ### Содержание
 
-1. **[Настройте доменный контроллер Samba на машине BR-SRV](https://github.com/sa22-demo/demo2025/blob/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202/README.md#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-1)**
+1. **[Настройте доменный контроллер Samba на машине BR-SRV](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-1)**
     > Не решено
-2. **[Сконфигурируйте файловое хранилище](https://github.com/sa22-demo/demo2025/blob/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202/README.md#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2)**
+2. **[Сконфигурируйте файловое хранилище](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2)**
 
 3. **[Настройте службу сетевого времени на базе сервиса chrony](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-3)**
 
