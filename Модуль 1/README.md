@@ -33,7 +33,7 @@
 <br/>
 
 <p align="center">
-  <img width="444" src="https://github.com/user-attachments/assets/84f8b674-344e-4bc2-82c8-d5f0727cbb00"
+  <img width="444" src="https://github.com/user-attachments/assets/b8ee7b98-fdf1-41c3-9f67-1b130eeb8b99"
 <p\>
 
 <br/>
