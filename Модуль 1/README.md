@@ -821,7 +821,7 @@ interface int2
     <td align="center">CNAME</td>
   </tr>
   <tr>
-    <td align="center">BR-RTR</td>
+    <td align="center">HQ-RTR</td>
     <td align="center">wiki.au-team.irpo</td>
     <td align="center">CNAME</td>
   </tr>
