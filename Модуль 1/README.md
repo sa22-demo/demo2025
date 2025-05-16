@@ -153,13 +153,13 @@ hostnamectl set-hostname <FQDN>; exec bash
     <td align="center">172.16.4.1</td>
   </tr>
   <tr>
-    <td align="center">ens19</td>
+    <td align="center">ens19.100</td>
     <td align="center">192.168.100.1</td>
     <td align="center">/26</td>
     <td align="center"></td>
   </tr>
   <tr>
-    <td align="center">ens20</td>
+    <td align="center">ens19.200</td>
     <td align="center">192.168.200.1</td>
     <td align="center">/28</td>
     <td align="center"></td>
