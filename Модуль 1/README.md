@@ -33,9 +33,8 @@
 <br/>
 
 <p align="center">
-  <img width="450" height="600" src="https://github.com/user-attachments/assets/8ee209f5-6fed-4f03-bbe3-e202155957b3"
+  <img width="444" src="https://github.com/user-attachments/assets/84f8b674-344e-4bc2-82c8-d5f0727cbb00"
 <p\>
-<p align="center"><strong>Топология</strong></p>
 
 <br/>
 
