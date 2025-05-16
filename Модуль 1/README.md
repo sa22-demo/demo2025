@@ -238,12 +238,16 @@ default via 192.168.100.1
 <br/>
 
 #### Настраиваем интерфейсы на **HQ-RTR**, которые смотрят в сторону **HQ-SRV** и **HQ-CLI** (с разделением на VLAN):
-В каталоге **`ens19/`** лежит только **`options`**:
+В каталоге **`ens19/`** лежит стандартный **`options`**:
 ```yml
-DISABLED=no
-TYPE=eth
 BOOTPROTO=static
+TYPE=eth
+CONFIG_WIRELESS=no
+SYSTEMD_BOOTPROTO=static
 CONFIG_IPV4=yes
+DISABLED=no
+NM_CONTROLLED=no
+SYSTEMD_CONTROLLED=no
 ```
 
 <br/>
