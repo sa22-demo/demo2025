@@ -7,3 +7,5 @@
 - **[Модуль 1](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201)**
 
 - **[Модуль 2](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202)**
+
+[![Image](https://speed.cloudflare.com/static/img/speedrabbit-animate.gif)]
