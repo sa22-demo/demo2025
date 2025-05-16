@@ -205,43 +205,86 @@ hostnamectl set-hostname <FQDN>; exec bash
 
 <br/>
 
-#### Наcтройка IP-адресации на **HQ-SRV**, **BR-SRV**, **HQ-CLI** (настройка IP-адресации на **ISP** проводится в [следующем задании](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2))
+#### Наcтройка IP-адресации на **HQ-SRV**, **BR-SRV**, **HQ-CLI**, **HQ-RTR**, **BR-RTR** (настройка IP-адресации на **ISP** проводится в [следующем задании](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2))
 
 Приводим файлы **`options`**, **`ipv4address`**, **`ipv4route`** в директории **`/etc/net/ifaces/*имя интерфейса*/`** к следующему виду (в примере **HQ-SRV**):
+> **`options`**
 ```yml
 DISABLED=no
 TYPE=eth
 BOOTPROTO=static
 CONFIG_IPV4=yes
 ```
-> **`options`**
 
+<br/>
+
+> **`ipv4address`**
 ```yml
 192.168.100.62/26
 ```
-> **`ipv4address`**
 
+<br/>
+
+> **`ipv4route`**
 ```yml
 default via 192.168.100.1
 ```
-> **`ipv4route`**
-
-<br/>
-
-#### Настраиваем интерфейс на **HQ-RTR**, который смотрит в сторону **ISP**:
-
-<br/>
-
-Настраиваем интерфейсы на **HQ-RTR**, которые смотрят в сторону **HQ-SRV** и **HQ-CLI** (с разделением на VLAN):
 
 
 <br/>
 
-#### Адресация на BR-RTR (без разделения на VLAN) настраивается аналогично примеру выше
+#### Настраиваем интерфейсы на **HQ-RTR**, которые смотрят в сторону **HQ-SRV** и **HQ-CLI** (с разделением на VLAN):
+В каталоге **`ens19/`** лежит только **`options`**:
+```yml
+DISABLED=no
+TYPE=eth
+BOOTPROTO=static
+CONFIG_IPV4=yes
+```
 
 <br/>
 
+Настройка VLAN производится по пути **`ens19.xxx/`** , где xxx - номер VLAN
 
+> **`ens19.100/options`**
+```yml
+TYPE=vlan
+HOST=ens19
+VID=100
+DISABLED=no
+```
+> **`ens19.100/ipv4address`**
+```yml
+192.168.100.1/26
+```
+
+<br/>
+
+> **`ens19.200/options`**
+```yml
+TYPE=vlan
+HOST=ens19
+VID=200
+DISABLED=no
+```
+> **`ens19.200/ipv4address`**
+```yml
+192.168.200.1/28
+```
+
+<br/>
+
+> **`ens19.999/options`**
+```yml
+TYPE=vlan
+HOST=ens19
+VID=999
+DISABLED=no
+```
+> **`ens19.999/ipv4address`**
+```yml
+192.168.99.1/29
+```
 </details>
 
 <br/>
