@@ -24,9 +24,8 @@
 <br/>
 
 <p align="center">
-  <img width="450" height="600" src="https://github.com/user-attachments/assets/8ee209f5-6fed-4f03-bbe3-e202155957b3"
+  <img width="444" src="https://github.com/user-attachments/assets/b8ee7b98-fdf1-41c3-9f67-1b130eeb8b99"
 <p\>
-<p align="center"><strong>Топология</strong></p>
 
 <br/>
 
