@@ -1,32 +1,32 @@
-# *Demo2025 - Модуль 1*
+# *Модуль 1*
 
-### **[Задание](https://github.com/damh66/demo2025/blob/main/%D0%9A%D0%9E%D0%94%2009.02.06-1-2025%20%D0%A2%D0%BE%D0%BC%201%20(%D1%81%D0%BE%D0%BA%D1%80).pdf)**
+### **[Задание](https://github.com/sa22-demo/demo2025/blob/main/%D0%97%D0%90%D0%94%D0%90%D0%9D%D0%98%D0%95%20%D0%9A%D0%9E%D0%94%2009.02.06-1-2025.pdf)**
 
 #
 
 ### Содержание
 
-1. **[Произведите базовую настройку устройств](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-1)**
+1. **[Произведите базовую настройку устройств](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-1)**
 
-2. **[Настройка ISP](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2)**
+2. **[Настройка ISP](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2)**
   
-3. **[Создание локальных учетных записей](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-3)**
+3. **[Создание локальных учетных записей](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-3)**
   
-4. **[Настройте на интерфейсе HQ-RTR в сторону офиса HQ виртуальный коммутатор](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-4)**
+4. **[Настройте на интерфейсе HQ-RTR в сторону офиса HQ виртуальный коммутатор](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-4)**
    
-5. **[Настройка безопасного удаленного доступа на серверах HQ-SRV и BR-SRV](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-5)**
+5. **[Настройка безопасного удаленного доступа на серверах HQ-SRV и BR-SRV](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-5)**
   
-6. **[Между офисами HQ и BR необходимо сконфигурировать IP-туннель](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-6)**
+6. **[Между офисами HQ и BR необходимо сконфигурировать IP-туннель](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-6)**
 
-7. **[Обеспечьте динамическую маршрутизацию](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-7)**
+7. **[Обеспечьте динамическую маршрутизацию](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-7)**
 
-8. **[Настройка динамической трансляции адресов](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-8)**
+8. **[Настройка динамической трансляции адресов](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-8)**
 
-9. **[Настройка протокола динамической конфигурации хостов](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-9)**
+9. **[Настройка протокола динамической конфигурации хостов](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-9)**
 
-10. **[Настройка DNS для офисов HQ и BR](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-10)**
+10. **[Настройка DNS для офисов HQ и BR](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-10)**
 
-11. **[Настройте часовой пояс на всех устройствах, согласно месту проведения экзамена](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-11)**
+11. **[Настройте часовой пояс на всех устройствах, согласно месту проведения экзамена](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-11)**
 
 <br/>
 
@@ -65,7 +65,7 @@
 <summary>Решение</summary>
 <br/>
 
-**Полное доменное имя можно посмотреть в таблице для [Задания 10](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-10)**
+**Полное доменное имя можно посмотреть в таблице для [Задания 10](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-10)**
 
 <br/>
 
@@ -217,7 +217,7 @@ hostname <name>
 
 <br/>
 
-#### Наcтройка IP-адресации на **HQ-SRV**, **BR-SRV**, **HQ-CLI** (настройка IP-адресации на **ISP** проводится в [следующем задании](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2))
+#### Наcтройка IP-адресации на **HQ-SRV**, **BR-SRV**, **HQ-CLI** (настройка IP-адресации на **ISP** проводится в [следующем задании](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2))
 
 Приводим файлы **`options`**, **`ipv4address`**, **`ipv4route`** в директории **`/etc/net/ifaces/*имя интерфейса*/`** к следующему виду (в примере **HQ-SRV**):
 ```yml
@@ -360,7 +360,7 @@ default via *адрес шлюза*
 
 <br/>
 
-#### Настройка интерфейсов, смотрящих в сторону HQ-RTR и BR-RTR происходит аналогично настройке в [Задании 1](https://github.com/damh66/demo2025/tree/main/module1#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-1)
+#### Настройка интерфейсов, смотрящих в сторону HQ-RTR и BR-RTR происходит аналогично настройке в [Задании 1](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-1)
 
 <br/>
 
