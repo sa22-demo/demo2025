@@ -69,11 +69,11 @@
 <br/>
 
 #### Настройка имен устройств на ALT Linux
-```yml
+```bash
 hostnamectl set-hostname <FQDN>; exec bash
 ```
 > FQDN (Fully Qualified Domain Name) - полное доменное имя
-> 
+>
 > `exec bash` - обновление оболочки
 
 <p align="center"><strong>Таблица подсетей</strong></p>
@@ -209,7 +209,7 @@ hostnamectl set-hostname <FQDN>; exec bash
 
 Приводим дефолтные файлы **`options`**, **`ipv4address`**, **`ipv4route`** в директории **`/etc/net/ifaces/*имя интерфейса*/`** к следующему виду (в примере **HQ-SRV**):
 > **`options`**
-```yml
+```ini
 BOOTPROTO=static
 TYPE=eth
 CONFIG_WIRELESS=no
@@ -223,14 +223,14 @@ SYSTEMD_CONTROLLED=no
 <br/>
 
 > **`ipv4address`**
-```yml
+```ini
 192.168.100.62/26
 ```
 
 <br/>
 
 > **`ipv4route`**
-```yml
+```ini
 default via 192.168.100.1
 ```
 
@@ -239,7 +239,7 @@ default via 192.168.100.1
 
 #### Настраиваем интерфейсы на **HQ-RTR**, которые смотрят в сторону **HQ-SRV** и **HQ-CLI** (с разделением на VLAN):
 В каталоге **`ens19/`** лежит стандартный **`options`**:
-```yml
+```ini
 BOOTPROTO=static
 TYPE=eth
 CONFIG_WIRELESS=no
@@ -255,47 +255,51 @@ SYSTEMD_CONTROLLED=no
 Настройка VLAN производится по пути **`ens19.xxx/`** , где xxx - номер VLAN
 
 > **`ens19.100/options`**
-```yml
+```ini
 TYPE=vlan
 HOST=ens19
 VID=100
 DISABLED=no
 ```
 > **`ens19.100/ipv4address`**
-```yml
+```ini
 192.168.100.1/26
 ```
 
 <br/>
 
 > **`ens19.200/options`**
-```yml
+```ini
 TYPE=vlan
 HOST=ens19
 VID=200
 DISABLED=no
 ```
 > **`ens19.200/ipv4address`**
-```yml
+```ini
 192.168.200.1/28
 ```
 
 <br/>
 
 > **`ens19.999/options`**
-```yml
+```ini
 TYPE=vlan
 HOST=ens19
 VID=999
 DISABLED=no
 ```
 > **`ens19.999/ipv4address`**
-```yml
+```ini
 192.168.99.1/29
 ```
 </details>
 
 <br/>
+
+
+
+
 
 ## Задание 2
 
@@ -319,25 +323,16 @@ DISABLED=no
 <summary>Решение</summary>
 <br/>
 
-#### Настройка интерфейса, который получает IP-адрес по DHCP
+#### Настройка интерфейса, который получает сетевую конфигурацию по DHCP
 
 Файл **`options`** (в директории интерфейса) приводим к следующему виду:
-```yml
+```ini
 BOOTPROTO=dhcp
 TYPE=eth
 DISABLED=no
 CONFIG_IPV4=yes
 ```
-> **`BOOTPROTO=dhcp`** - заменили статический способ настройки адреса на динамическое получение
-
-<br/>
-
-#### Настройка маршрута по умолчанию
-
-Прописываем шлюз по умолчанию:
-```yml
-default via *адрес шлюза*
-```
+> **`BOOTPROTO=dhcp`** - заменили статику на динамику
 
 <br/>
 
@@ -348,20 +343,29 @@ default via *адрес шлюза*
 #### Включение маршрутизации
 
 В файле **`/etc/net/sysctl.conf`** изменяем строку:
-```yml
+```bash
 net.ipv4.ip_forward = 1
 ```
 
 <br/>
 
+
+# <u>*перепроверить, нужно ли /etc/sysctl.conf после sysctl -p*</u>
+
+
 Изменения в файле **`sysctl.conf`** применяем следующей командой:
-```yml
+```bash
 sysctl -p /etc/sysctl.conf
 ```
 
 </details>
 
 <br/>
+
+
+
+
+
 
 ## Задание 3
 
@@ -389,10 +393,10 @@ sysctl -p /etc/sysctl.conf
 <summary>Решение</summary>
 <br/>
 
-#### Создание пользователя `sshuser` на серверах
+#### Создание пользователя `sshuser` на HQ-SRV, BR-SRV, HQ-CLI
 
-Создаем самого пользователя:
-```yml
+Создаем пользователя:
+```bash
 useradd sshuser -u 1010
 ```
 > опция **`-u`** позволяет указать идентификатор пользователя сразу при создании
@@ -400,52 +404,39 @@ useradd sshuser -u 1010
 <br/>
 
 Задаем пароль:
-```yml
+```bash
 passwd sshuser
 ```
 
 <br/>
 
 Добавляем в группу **wheel**:
-```yml
+```bash
 usermod -aG wheel sshuser
 ```
 
 <br/>
 
-Добавляем строку в **`/etc/sudoers`**:
+Раскомментируем строку в **`/etc/sudoers`**:
 ```yml
-sshuser ALL=(ALL) NOPASSWD:ALL
+WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL
 ```
-> Позволяет запускать **sudo** без аутентификации 
+> Запуск **sudo** для группы **wheel** без аутентификации 
 
 <br/>
 
-#### Создание пользователя `net_admin` на Ecorouter
+#### Создание пользователя `net_admin` на HQ-RTR, BR-RTR:
 
-Создаем самого пользователя:
-```yml
-username net_admin
-```
-
-<br/>
-
-Задаем пароль:
-```yml
-password P@ssw0rd
-```
-
-<br/>
-
-Присваиваем привилегии администратора:
-```yml
-role admin
-```
+Делаем аналогично с sshuser (без -u 1010)
 
 
 </details>
 
 <br/>
+
+
+
+
 
 ## Задание 4
 
@@ -459,14 +450,17 @@ role admin
 <br/>
 
 <details>
-<summary>Не решено</summary>
+<summary>Решение</summary>
 <br/>
 
-
-
+https://dzen.ru/a/ZyHLLdBle0DoD1oJ
 </details>
 
 <br/>
+
+
+
+
 
 ## Задание 5
 
@@ -483,13 +477,13 @@ role admin
 <summary>Решение</summary>
 <br/>
 
-Приводим указанные строки в файле **`/etc/openssh/sshd_config`** к следующим значениям:
-```yml
+Добавляем следующие строки в файл **`/etc/openssh/sshd_config`**:
+```yaml
 Port 2024
 MaxAuthTries 2
 PasswordAuthentication yes
 Banner /etc/openssh/bannermotd
-AllowUsers  sshuser
+AllowUsers    sshuser
 ```
 > В параметре **AllowUsers** вместо пробела используется **`Tab`**
 
@@ -497,21 +491,23 @@ AllowUsers  sshuser
 
 Создаем файл **`bannermotd`**:
 ```yml
-----------------------
 Authorized access only
-----------------------
 ```
 
 <br/>
 
 Перезагружаем службу:
-```yml
+```bash
 systemctl restart sshd
 ```
 
 </details>
 
 <br/>
+
+
+
+
 
 ## Задание 6
 
@@ -527,38 +523,41 @@ systemctl restart sshd
 <summary>Решение</summary>
 <br/>
 
-#### Создание туннеля на HQ-RTR
+#### Настройка туннеля между HQ-RTR и BR-RTR:
+Для начала нужно создать директорию для туннельного интерфейса:  
 
-Создаем интерфейс **GRE**-туннеля на **HQ-RTR**:
-```yml
-int tunnel.0
+```bash
+mkdir /etc/net/ifaces/gre1
 ```
 
-<br/>
+Затем создать файл `options` у туннеля:  
 
-Назначаем **IP-адрес**:
-```yml
-ip add 172.16.0.1/30
+```ini
+TYPE=iptun
+TUNTYPE=gre
+TUNLOCAL=172.16.4.2
+TUNREMOTE=172.16.5.2
+TUNOPTIONS='ttl 64'
+HOST=ens18
 ```
 
-<br/>
+> в `TUNLOCAL` нужно вписать адрес смотрящий на ISP  
+> в `TUNREMOTE` нужно вписать адрес устройства, к которому идет туннель  
+> в `HOST` нужно вписать интерфейс смотрящий на ISP  
 
-Выставляем параметр **MTU**:
-```yml
-ip mtu 1400
-```
-> В связи с добавлением служебного заголовка появляются новые требования к допустимому значению MTU при передаче пакета. Заголовок GRE имеет размерность 4 байта, 20 байт транспортный IP заголовок, заголовок IP пакета 20 байт, таким образом возникает необходимость задавать размер допустимого MTU на интерфейсах туннеля меньше стандартного значения.
+Дальше добавляем IP-адрес на туннель:
 
-<br/>
-
-Задаем режим работы туннеля **GRE** и адреса **начала** и **конца** туннеля:
-```yml
-ip tunnel 172.16.4.2 172.16.5.2 mode gre
+```bash
+echo 172.16.0.1/30 > /etc/net/ifaces/gre1/ipv4address
 ```
 
-<br/>
+В конце перезагружаем службу network:  
 
-#### GRE-туннель на BR-RTR настраивается аналогично примеру выше
+```bash
+systemctl restart network
+```
+
+### Все тоже самое делаем и на другом устройстве туннеля
 
 </details>
 
@@ -584,16 +583,46 @@ ip tunnel 172.16.4.2 172.16.5.2 mode gre
 
 #### Настройка OSPF на HQ-RTR
 
-Создаем процесс **OSPF**, указываем **идентификатор маршрутизатора**, объявляем сети и указываем **пассивные** интерфейсы:
-```yml
-router ospf 1
-  router-id 1.1.1.1
+Устанавливаем:
+```
+apt-get update
+apt-get -y install frr
+```
+
+Включаем автозагрузку FRR:  
+```
+systemctl enable --now frr
+```
+
+В файле `/etc/frr/daemons` меняем `ospfd=no` на `ospfd=yes`  
+
+Затем заходим в среду роутера(на примере HQ-RTR):  
+```
+vtysh
+```
+
+И прописываем:  
+```bash
+conf t
+router ospf
   network 172.16.0.0/30 area 0
   network 192.168.100.0/26 area 0
   network 192.168.200.0/28 area 0
-  passive-interface default
-  no passive-interface tunnel.0
+  exit
+ip forwarding
+do w
 ```
+
+Иногда настройки vtysh слетают, для этого заходим в:
+```
+nano /etc/frr/frr.conf
+```
+
+И добавляем после `ipv6 forwarding` такую строчку:
+```
+ip forwarding
+```
+
 
 <br/>
 
@@ -602,6 +631,10 @@ router ospf 1
 </details>
 
 <br/>
+
+
+
+
 
 ## Задание 8
 
@@ -1099,3 +1132,8 @@ show ntp timezone
 ```
 
 </details>
+
+<br/>
+<br/>
+
+###### Не стоит воспринимать данную инструкцию, как истину в последней инстанции, она может оказаться неэффективной или вообще нерабочей. Описан метод, который оказался эффективным в одном из случаев, но не гарантирует аналогичный результат для всех.
