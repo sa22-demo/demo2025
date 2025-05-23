@@ -205,7 +205,7 @@ hostnamectl set-hostname <FQDN>; exec bash
 
 <br/>
 
-#### Наcтройка IP-адресации на **HQ-SRV**, **BR-SRV**, **HQ-CLI**, **HQ-RTR**, **BR-RTR** (настройка IP-адресации на **ISP** проводится в [следующем задании](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2))
+#### Настройка IP-адресации на **HQ-SRV**, **BR-SRV**, **HQ-CLI**, **HQ-RTR**, **BR-RTR** (настройка IP-адресации на **ISP** проводится в [следующем задании](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%201#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-2))
 
 Приводим дефолтные файлы **`options`**, **`ipv4address`**, **`ipv4route`** в директории **`/etc/net/ifaces/*имя интерфейса*/`** к следующему виду (в примере **HQ-SRV**):
 > **`options`**
@@ -465,6 +465,8 @@ WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL
 <details>
 <summary>Решение</summary>
 <br/>
+
+https://dzen.ru/a/ZyHLLdBle0DoD1oJ
 </details>
 
 <br/>
@@ -724,6 +726,46 @@ systemctl enable --now iptables
 <summary>Решение</summary>
 <br/>
 
+Нужно добавить в `resolv.conf` DNS-сервер, иначе мы не сможем обновить репозитории, поэтому идём его редактировать следующей командой:
+```bash
+mcedit /etc/net/ifaces/ens18/resolv.conf
+```
+
+И добавляем следующую строку в него:
+```ini
+nameserver 77.88.8.8
+```
+
+Обновим пакеты и установим её командами:
+```bash
+apt-get update
+apt-get install dnsmasq
+```
+
+```bash
+systemctl enable dnsmasq
+```
+Затем зайдем в настройки конфигурационного файла командой:
+```bash
+mcedit /etc/dnsmasq.conf
+```
+
+И внесем в него следующие строки (можно прямо в начало файла):
+```ini
+no-resolv
+dhcp-range=192.168.200.14,192.168.200.14,24h
+dhcp-option=3,192.168.200.1
+dhcp-option=6,192.168.100.62
+interface=ens19.200
+```
+
+Затем перезапускаем службу и посмотрим её статус:
+```bash
+systemctl restart dnsmasq
+systemctl status dnsmasq
+```
+
+На HQ-CLI изменяем приводим options к следующему виду:
 
 </details>
 
