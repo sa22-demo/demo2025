@@ -349,15 +349,28 @@ net.ipv4.ip_forward = 1
 
 <br/>
 
-
-# <u>*перепроверить, нужно ли /etc/sysctl.conf после sysctl -p*</u>
-
-
 Изменения в файле **`sysctl.conf`** применяем следующей командой:
 ```bash
-sysctl -p /etc/sysctl.conf
+sysctl -p
 ```
 
+<br/>
+
+Добавляем правила **`iptables`** на ISP:
+```bash
+iptables -t nat -A POSTROUTING -o ens18 -s 172.16.4.0/28 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o ens18 -s 172.16.5.0/28 -j MASQUERADE
+```
+
+Сохраняем:
+```bash
+iptables-save > /etc/sysconfig/iptables
+```
+
+Включаем:
+```bash
+systemctl enable --now iptables
+```
 </details>
 
 <br/>
@@ -530,7 +543,7 @@ systemctl restart sshd
 mkdir /etc/net/ifaces/gre1
 ```
 
-Затем создать файл `options` у туннеля:  
+Затем создать файл `options` у туннеля():  
 
 ```ini
 TYPE=iptun
@@ -594,7 +607,16 @@ apt-get -y install frr
 systemctl enable --now frr
 ```
 
-В файле `/etc/frr/daemons` меняем `ospfd=no` на `ospfd=yes`  
+<br/>
+
+В файле `/etc/frr/daemons` меняем `ospfd=no` на `ospfd=yes`
+
+Рестарт:
+```bash
+systemctl restart frr
+```
+
+<br/>
 
 Затем заходим в среду роутера(на примере HQ-RTR):  
 ```
@@ -612,17 +634,6 @@ router ospf
 ip forwarding
 do w
 ```
-
-Иногда настройки vtysh слетают, для этого заходим в:
-```
-nano /etc/frr/frr.conf
-```
-
-И добавляем после `ipv6 forwarding` такую строчку:
-```
-ip forwarding
-```
-
 
 <br/>
 
@@ -650,73 +661,39 @@ ip forwarding
 <summary>Решение</summary>
 <br/>
 
-#### Настройка NAT на ISP
+#### Настройка NAT на HQ-RTR
 
-Добавляем правила **`iptables`** на ISP
-```yml
-iptables -t nat -A POSTROUTING -o ens224 -s 172.16.4.0/28 -j MASQUERADE
-iptables -t nat -A POSTROUTING -o ens224 -s 172.16.5.0/28 -j MASQUERADE
+```bash
+iptables -t nat -A POSTROUTING -o ens18 -s 192.168.100.0/26 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o ens18 -s 192.168.200.0/28 -j MASQUERADE
 ```
 
-<br/>
-
-Сохраняем правила:
-```yml
+Сохраняем:
+```bash
 iptables-save > /etc/sysconfig/iptables
 ```
 
-<br/>
-
-Включаем и добавляем **`iptables`** в автозагрузку:
-```yml
+Включаем:
+```bash
 systemctl enable --now iptables
-```
-
-<br/>
-
-#### Настройка NAT на HQ-RTR
-
-Указываем **внутренние** и **внешние** интерфейсы:
-```yml
-int int1
-  ip nat inside
-!
-int int2
-  ip nat inside
-!
-int int0
-  ip nat outside
-```
-
-<br/>
-
-Создаем пул:
-```yml
-ip nat pool NAT_POOL 192.168.100.1-192.168.100.62,192.168.200.1-192.168.200.14
-```
-
-<br/>
-
-Создаем **правило** трансляции адресов, указывая внешний интерфейс:
-```yml
-ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
 ```
 
 <br/>
 
 #### Настройка NAT на BR-RTR
 
-Конфигурация:
-```yml
-int int1
-  ip nat inside
-!
-int int0
-  ip nat outside
-!
-ip nat pool NAT_POOL 192.168.0.1-192.168.0.30
-!
-ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
+```bash
+iptables -t nat -A POSTROUTING -o ens18 -s 192.168.0.0/27 -j MASQUERADE
+```
+
+Сохраняем:
+```bash
+iptables-save > /etc/sysconfig/iptables
+```
+
+Включаем:
+```bash
+systemctl enable --now iptables
 ```
 
 </details>
@@ -749,39 +726,6 @@ ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
 <summary>Решение</summary>
 <br/>
 
-Создаем **пул** для **DHCP-сервера**:
-```yml
-ip pool hq-cli 192.168.200.14-192.168.200.14
-```
-
-<br/>
-
-Настраиваем сам **DHCP-сервер**:
-```yml
-dhcp-server 1
-  pool hq-cli 1
-    mask 28
-    gateway 192.168.200.1
-    dns 192.168.100.62
-    domain-name au-team.irpo
-```
-> **`pool hq-cli 1`** - привязка **пула**
-
-> **`mask 28`** - указание **маски** для выдаваемых адресов из пула
-
-> **`gateway 192.168.200.1`** - указание **шлюза по умолчанию** для клиентов
-
-> **`dns 192.168.100.62`** - указание **DNS-сервера** для клиентов
-
-> **`domain-name au-team.irpo`** - указание **DNS-суффикса** для офиса **HQ**
-
-<br/>
-
-Привязываем **DHCP-сервер** к интерфейсу (смотрящий в сторону **CLI**):
-```yml
-interface int2
-  dhcp-server 1
-```
 
 </details>
 
