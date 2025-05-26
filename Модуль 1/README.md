@@ -753,6 +753,7 @@ mcedit /etc/dnsmasq.conf
 И внесем в него следующие строки (можно прямо в начало файла):
 ```ini
 no-resolv
+server=192.168.100.62
 dhcp-range=192.168.200.14,192.168.200.14,24h
 dhcp-option=3,192.168.200.1
 dhcp-option=6,192.168.100.62
@@ -765,7 +766,19 @@ systemctl restart dnsmasq
 systemctl status dnsmasq
 ```
 
-На HQ-CLI изменяем приводим options к следующему виду:
+На HQ-CLI приводим `options` к следующему виду:
+```ini
+BOOTPROTO=dhcp
+TYPE=eth
+CONFIG_WIRELESS=no
+SYSTEMD_BOOTPROTO=dhcp4
+CONFIG_IPV4=yes
+DISABLED=no
+NM_CONTROLLED=no
+SYSTEMD_CONTROLLED=no
+```
+
+Если были созданы файлы `ipv4address` и `ipv4route`, то их нужно удалить.
 
 </details>
 
@@ -834,242 +847,81 @@ systemctl status dnsmasq
 <summary>Решение</summary>
 <br/>
 
-#### Настройка конфигурации bind
-
-Устанавливаем необходимые пакеты:
-```yml
-apt-get install -y bind bind-utils
+Нужно добавить в `resolv.conf` DNS-сервер, иначе мы не сможем обновить репозитории, поэтому идём его редактировать следующей командой:
+```bash
+mcedit /etc/net/ifaces/ens18/resolv.conf
 ```
 
-<br/>
-
-Изменяем содержание перечисленных строк в **`/etc/bind/options.conf`** к следующему виду:
-```yml
-listen-on { 127.0.0.1; 192.168.100.62; };
-
-forwarders { 77.88.8.8; };
-
-allow-query { 192.168.100.0/26; 192.168.200.0/28; 192.168.0.0/27; };
-
-```
-> **`listen-on`** - сетевые интерфейсы, которые будет прослушивать служба
->
-> **`forwarders`** - DNS-сервер, на который будут перенаправляться запросы клиентов
->
-> **`allow-query`** - IP-адреса и подсети от которых будут обрабатываться запросы
-
-<br/>
-
-Конфигурируем ключи **rndc**:
-```yml
-rndc-confgen > /etc/rndckey
-```
-> Делаем вывод в файл, чтобы скопировать оттуда
-
-<br/>
-
-Приводим файл **`/etc/bind/rndc.key`** к следующему виду:
-```yml
-//key "rndc-key" {
-//  secret "@RNDC_KEY@";
-//};
-
-key "rndc-key" {
-  algorithm hmac-sha256;
-  secret "VTmhjyXFDo0QpaBl3UQWx1e0g9HElS2MiFDtNQzDylo=";
-};
-```
-> Первые строки закомментировали
->
-> Вставили ключ **rndc**
-
-<br/>
-
-Проверяем на ошибки:
-```yml
-named-checkconf
-```
-
-<br/>
-
-Запускаем и добавляем в автозагрузку **`bind`**:
-```yml
-systemctl enable --now bind
-```
-
-<br/>
-
-Изменяем **`resolv.conf`** интерфейса:
-```yml
-search au-team.irpo
-nameserver 127.0.0.1
-nameserver 192.168.100.62
+И добавляем следующую строку в него:
+```ini
 nameserver 77.88.8.8
-search yandex.ru
 ```
 
-<br/>
-
-#### Создание и настройка прямой зоны
-
-Прописываем ее в **`/etc/bind/local.conf`**:
-```yml
-zone "au-team.irpo" {
-  type master;
-  file "au-team.irpo.db";
-};
+Обновим пакеты и установим её командами:
+```bash
+apt-get update
+apt-get install dnsmasq
 ```
 
-<br/>
-
-Копируем шаблон прямой зоны:
-```yml
-cp /etc/bind/zone/localdomain /etc/bind/zone/au-team.irpo.db
+```bash
+systemctl enable dnsmasq
+```
+Затем зайдем в настройки конфигурационного файла командой:
+```bash
+mcedit /etc/dnsmasq.conf
 ```
 
-<br/>
+И добавляем в неё строки (для удобства прям с первой строки файла):
+```ini
+no-resolv               #(не будет использовать /etc/resolv.conf)
+domain=au-team.irpo
+server=77.88.8.8        #(адрес общедоступного DNS-сервера)
+interface=*             #(на каком интерфейсе будет работать служба)
 
-Задаем пользователя и права на файл:
-```yml
-chown named. /etc/bind/zone/au-team.irpo.db
-chmod 600 /etc/bind/zone/au-team.irpo.db
+address=/hq-rtr.au-team.irpo/192.168.1.1
+ptr-record=1.1.168.192.in-addr.arpa,hq-rtr.au-team.irpo
+cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
+cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
+
+address=/br-rtr.au-team.irpo/192.168.4.1
+
+address=/hq-srv.au-team.irpo/192.168.1.2
+ptr-record=2.1.168.192.in-addr.arpa,hq-srv.au-team.irpo
+
+address=/hq-cli.au-team.irpo/192.168.2.2  #(Смотрите адрес на HQ-CLI, т.к он выдаётся по DHCP)
+ptr-record=2.2.168.192.in-addr.arpa,hq-cli.au-team.irpo
+
+address=/br-srv.au-team.irpo/192.168.4.2
 ```
 
-<br/>
+Сохраняем файл нажатием кнопки F2, а затем выход с помощью F10.
+Теперь необходимо добавить строку 192.168.1.1 hq-rtr.au-team.irpo в файл /etc/hosts:
+mcedit /etc/hosts
 
-Приводим его к следующему виду:
-```yml
-$TTL    1D
-@       IN      SOA     au-team.irpo. root.au-team.irpo. (
-                                2024102200      ; serial
-                                12H             ; refresh
-                                1H              ; retry
-                                1W              ; expire
-                                1H              ; ncache
-                        )
-        IN      NS      au-team.irpo.
-        IN      A       192.168.100.62
-hq-rtr  IN      A       192.168.100.1
-br-rtr  IN      A       192.168.0.1
-hq-srv  IN      A       192.168.100.62
-hq-cli  IN      A       192.168.200.14
-br-srv  IN      A       192.168.0.30
-moodle  IN      CNAME   hq-rtr
-wiki    IN      CNAME   hq-rtr
-```
+Сохраняем файл, выходим из редактора.
+И также нужно изменить файл resolv.conf:
+mcedit /etc/resolv.conf
+Теперь там должен находиться следующий адрес:
+127.0.0.1
 
-<br/>
+Перезапускаем службу командой:
+systemctl restart dnsmasq
 
-Проверяем на ошибки:
-```yml
-named-checkconf -z
-```
+Проверим пинг сначала с HQ-SRV на google.com и hq-rtr.au-team.irpo:
+ping google.com
+ping hq-rtr.au-team.irpo
 
-<br/>
+Теперь проверим пинг с HQ-CLI:
+ping google.com
+ping hq-rtr.au-team.irpo
 
-#### Создание и настройка обратных зон
+И проверим работу CNAME записей с HQ-CLI:
+dig moodle.au-team.irpo
 
-Прописываем их в **`/etc/bind/local.conf`**:
-```yml
-zone "100.168.192.in-addr.arpa" {
-  type master;
-  file "100.168.192.in-addr.arpa";
-};
+dig wiki.au-team.irpo
 
-zone "200.168.192.in-addr.arpa" {
-  type master;
-  file "200.168.192.in-addr.arpa";
-};
+Наш DNS-сервер настроен.
 
-zone "0.168.192.in-addr.arpa" {
-  type master;
-  file "0.168.192.in-addr.arpa";
-};
-```
-
-<br/>
-
-Копируем шаблон обратной зоны:
-```yml
-cp /etc/bind/zone/127.in-addr.arpa /etc/bind/zone/100.168.192.in-addr.arpa
-cp /etc/bind/zone/127.in-addr.arpa /etc/bind/zone/200.168.192.in-addr.arpa
-cp /etc/bind/zone/127.in-addr.arpa /etc/bind/zone/0.168.192.in-addr.arpa
-```
-
-<br/>
-
-Задаем пользователя и права на файл:
-```yml
-chown named. /etc/bind/zone/100.168.192.in-addr.arpa
-chmod 600 /etc/bind/zone/100.168.192.in-addr.arpa
-chown named. /etc/bind/zone/200.168.192.in-addr.arpa
-chmod 600 /etc/bind/zone/200.168.192.in-addr.arpa
-chown named. /etc/bind/zone/0.168.192.in-addr.arpa
-chmod 600 /etc/bind/zone/0.168.192.in-addr.arpa
-```
-
-<br/>
-
-Приводим их к следующему виду:
-```yml
-$TTL    1D
-@       IN      SOA     au-team.irpo. root.au-team.irpo. (
-                                2024102200      ; serial
-                                12H             ; refresh
-                                1H              ; retry
-                                1W              ; expire
-                                1H              ; ncache
-                        )
-        IN      NS      au-team.irpo.
-1       IN      PTR     hq-rtr.au-team.irpo.
-62      IN      PTR     hq-srv.au-team.irpo.
-```
-```yml
-$TTL    1D
-@       IN      SOA     au-team.irpo. root.au-team.irpo. (
-                                2024102200      ; serial
-                                12H             ; refresh
-                                1H              ; retry
-                                1W              ; expire
-                                1H              ; ncache
-                        )
-        IN      NS      au-team.irpo.
-14      IN      PTR     hq-cli.au-team.irpo.
-```
-```yml
-$TTL    1D
-@       IN      SOA     au-team.irpo. root.au-team.irpo. (
-                                2024102200      ; serial
-                                12H             ; refresh
-                                1H              ; retry
-                                1W              ; expire
-                                1H              ; ncache
-                        )
-        IN      NS      au-team.irpo.
-1      IN      PTR      br-rtr.au-team.irpo.
-30     IN      PTR      br-srv.au-team.irpo.
-```
-
-<br/>
-
-Проверяем на ошибки:
-```yml
-named-checkconf -z
-```
-
-<br/>
-
-Перезапускаем **`bind`**:
-```yml
-systemctl restart bind
-```
-
-<br/>
-
-Проверяем работоспособность:
-```yml
-nslookup **IP-адрес/DNS-имя**
-```
 
 </details>
 
