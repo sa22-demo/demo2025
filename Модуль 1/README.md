@@ -465,8 +465,7 @@ WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL
 <details>
 <summary>Решение</summary>
 <br/>
-
-https://dzen.ru/a/ZyHLLdBle0DoD1oJ
+¯\_(ツ)_/¯
 </details>
 
 <br/>
