@@ -873,55 +873,65 @@ mcedit /etc/dnsmasq.conf
 
 И добавляем в неё строки (для удобства прям с первой строки файла):
 ```ini
-no-resolv               #(не будет использовать /etc/resolv.conf)
+no-resolv               # не будет использовать /etc/resolv.conf
 domain=au-team.irpo
-server=77.88.8.8        #(адрес общедоступного DNS-сервера)
-interface=*             #(на каком интерфейсе будет работать служба)
+server=77.88.8.8        # адрес общедоступного DNS-сервера
+interface=*             # на каком интерфейсе будет работать служба
 
-address=/hq-rtr.au-team.irpo/192.168.1.1
-ptr-record=1.1.168.192.in-addr.arpa,hq-rtr.au-team.irpo
+address=/hq-rtr.au-team.irpo/192.168.100.1
+ptr-record=1.100.168.192.in-addr.arpa,hq-rtr.au-team.irpo
 cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
 cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
 
-address=/br-rtr.au-team.irpo/192.168.4.1
+address=/br-rtr.au-team.irpo/192.168.0.1
 
-address=/hq-srv.au-team.irpo/192.168.1.2
-ptr-record=2.1.168.192.in-addr.arpa,hq-srv.au-team.irpo
+address=/hq-srv.au-team.irpo/192.168.100.62
+ptr-record=62.100.168.192.in-addr.arpa,hq-srv.au-team.irpo
 
-address=/hq-cli.au-team.irpo/192.168.2.2  #(Смотрите адрес на HQ-CLI, т.к он выдаётся по DHCP)
-ptr-record=2.2.168.192.in-addr.arpa,hq-cli.au-team.irpo
+address=/hq-cli.au-team.irpo/192.168.200.14    # Смотрите адрес на HQ-CLI, т.к он выдаётся по DHCP)
+ptr-record=14.200.168.192.in-addr.arpa,hq-cli.au-team.irpo
 
-address=/br-srv.au-team.irpo/192.168.4.2
+address=/br-srv.au-team.irpo/192.168.0.30
 ```
 
-Сохраняем файл нажатием кнопки F2, а затем выход с помощью F10.
-Теперь необходимо добавить строку 192.168.1.1 hq-rtr.au-team.irpo в файл /etc/hosts:
-mcedit /etc/hosts
+Теперь необходимо добавить в файл `/etc/hosts` следующую строку (после ip адреса используется TAB):
 
-Сохраняем файл, выходим из редактора.
-И также нужно изменить файл resolv.conf:
-mcedit /etc/resolv.conf
-Теперь там должен находиться следующий адрес:
-127.0.0.1
+```bash
+192.168.100.1   hq-rtr.au-team.irpo
+```
 
-Перезапускаем службу командой:
+Перезапускаем службу:
+```bash
 systemctl restart dnsmasq
+```
 
-Проверим пинг сначала с HQ-SRV на google.com и hq-rtr.au-team.irpo:
-ping google.com
+Проверим пинг сначала с HQ-SRV на ya.ru и hq-rtr.au-team.irpo:
+```bash
+ping ya.ru
 ping hq-rtr.au-team.irpo
+```
 
 Теперь проверим пинг с HQ-CLI:
-ping google.com
+```bash
+ping ya.ru
 ping hq-rtr.au-team.irpo
+```
 
 И проверим работу CNAME записей с HQ-CLI:
-dig moodle.au-team.irpo
+```bash
+nslookup moodle.au-team.irpo
+nslookup wiki.au-team.irpo
+```
 
-dig wiki.au-team.irpo
+<br/>
 
-Наш DNS-сервер настроен.
+Теперь необходимо перенастроить все машины на DNS-сервер HQ-SRV, кроме ISP и HQ-CLI:
 
+Редактировать необходимо файл resolv.conf на внешнем интерфейсе, например `/etc/net/ifaces/ens18/resolv.conf`
+
+```bash
+nameserver 192.168.100.62
+```
 
 </details>
 
@@ -939,34 +949,23 @@ dig wiki.au-team.irpo
 
 #### Настройка часового пояса на Alt Linux
 
+На всякий случай ставим пакет:
+
+```bash
+apt-get install tzdata
+```
+
 Меняем часовой пояс следующей командой:
-```yml
-timedatectl set-timezone Asia/Yekaterinburg
+```bash
+timedatectl set-timezone Europe/Moscow
 ```
 
 <br/>
 
 Проверяем:
-```yml
+```bash
 timedatectl status
 ```
-
-<br/>
-
-#### Настройка часового пояса на EcoRouter
-
-Прописываем команду:
-```yml
-ntp timezone utc+5
-```
-
-<br/>
-
-Проверяем:
-```yml
-show ntp timezone
-```
-
 </details>
 
 <br/>
