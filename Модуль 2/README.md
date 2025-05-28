@@ -13,12 +13,14 @@
 3. **[Настройте службу сетевого времени на базе сервиса chrony](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-3)**
 
 4. **[Сконфигурируйте ansible на сервере BR-SRV](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-4)**
-
+    > Не решено
 5. **[Развертывание приложений в Docker на сервере BR-SRV](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-5)**
-    > Решено не полностью (проблема в **учетной записи пользователя базы данных**)
+    > Не решено
 6. **[На маршрутизаторах сконфигурируйте статическую трансляцию портов](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-6)**
-
+    > Не решено
 7. **[Запустите сервис moodle на сервере HQ-SRV](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-7)**
+8. **[Настройте веб-сервер nginx как обратный прокси-сервер на HQ-RTR]()**
+9. **[Удобным способом установите приложение Яндекс Браузере для организаций на HQ-CLI]()**
 <br/>
 
 <br/>
@@ -434,10 +436,10 @@ systemctl enable --now chronyd
 <br/>
 
 <details>
-<summary>Решение</summary>
+<summary>Не решено</summary>
 <br/>
 
-<!--
+<!-- НЕ ПРОВЕРЕНО, ПОЭТОМУ СКРЫТО
 #### Конфигурация SSH Alt Linux
 
 Затронутые строки в конфигурационном файле **SSH** **`/etc/openssh/sshd_config`** должны выглядеть следующим образом:
@@ -562,9 +564,10 @@ ansible -m ping all
 <br/>
 
 <details>
-<summary>Решено не полностью (проблема в учетной записи пользователя базы данных)</summary>
+<summary>Не решено</summary>
 <br/>
-
+    
+<!-- НЕ РАБОТАЕТ ПОЛНОСТЬЮ, ПОЭТОМУ СКРЫТО
 #### Конфигурация файла Docker-Compose
 
 Останавливаем службу **ahttpd**, которая занимает порт **8080**:
@@ -756,6 +759,7 @@ volumes:
 docker compose -f wiki.yml stop
 docker compose -f wiki.yml up -d
 ```
+-->
 
 </details>
 
@@ -774,8 +778,10 @@ docker compose -f wiki.yml up -d
 <br/>
 
 <details>
-<summary>Решение</summary>
+<summary>Не решено</summary>
 <br/>
+
+<!--
 
 #### Конфигурация BR-RTR
 
@@ -799,6 +805,8 @@ ip nat source static tcp 192.168.0.1 2024 192.168.0.30 2024
 ```yml
 ip nat source static tcp 192.168.100.1 2024 192.168.100.62 2024
 ```
+
+-->
 
 </details>
 
@@ -831,49 +839,49 @@ ip nat source static tcp 192.168.100.1 2024 192.168.100.62 2024
 #### Конфигурация базы данных
 
 Устанавливаем необходимые пакеты:
-```yml
+```bash
 apt-get install -y moodle moodle-apache2 moodle-base moodle-local-mysql phpMyAdmin
 ```
 
 <br/>
 
 Добавляем в **автозагрузку** базу данных:
-```yml
+```bash
 systemctl enable --now mysqld
 ```
 
 <br/>
 
 Задаем пароль для пользователя **root** в базе данных:
-```yml
+```bash
 mysqladmin password 'P@ssw0rd'
 ```
 
 <br/>
 
 Редактируем настройки **веб-сервера**:
-```yml
+```bash
 cat /etc/httpd2/conf/include/Directory_moodle_default.conf | grep 'Require all granted' || sed -i '/AllowOverride None/a Require all granted' /etc/httpd2/conf/include/Directory_moodle_default.conf
 ```
 
 <br/>
 
 Изменяем строку, отвечающую за количество входных переменных:
-```yml
+```bash
 sed -i 's/; max_input_vars = 1000/max_input_vars = 5000/g' /etc/php/8.2/apache2-mod_php/php.ini
 ```
 
 <br/>
 
 Добавляем в **автозагрузку** веб-сервер:
-```yml
+```bash
 systemctl enable --now httpd2
 ```
 
 <br/>
 
 Авторизуемся в **MySQL**:
-```yml
+```bash
 mysql -u root -p
 ```
 > Вводим ранее указанный пароль
@@ -966,6 +974,44 @@ grant all privileges on moodledb.* to moodle@localhost;
 <p align="center">
   <img width="600" src="https://github.com/user-attachments/assets/9ae25d22-7cf0-4b8c-8fd9-c1f538679d82"
 </p>
+
+</details>
+
+<br/>
+
+## Задание 8
+
+### Настройте веб-сервер nginx как обратный прокси-сервер на HQ-RTR
+
+- При обращении к HQ-RTR по доменному имени moodle.au-team.irpo клиента должно перенаправлять на HQ-SRV на стандартный порт, на сервис moodle
+
+- При обращении к HQ-RTR по доменному имени wiki. au-team.irpo клиента должно перенаправлять на BR-SRV на порт, на сервис mediwiki
+
+<br/>
+
+<details>
+<summary>Решение</summary>
+<br/>
+
+
+
+</details>
+
+<br/>
+
+## Задание 9
+
+### Удобным способом установите приложение Яндекс Браузере для организаций на HQ-CLI
+
+- Установку браузера отметьте в отчёте
+
+<br/>
+
+<details>
+<summary>Решение</summary>
+<br/>
+
+
 
 </details>
 
