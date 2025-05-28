@@ -33,7 +33,7 @@
 
 ### Настройте доменный контроллер Samba на машине BR-SRV
 
-- Создайте 5 пользователей для офиса HQ: имена пользователей фомата user№.hq. Создайте группу hq, введите в эту группу созданных пользователей
+- Создайте 5 пользователей для офиса HQ: имена пользователей формата user№.hq. Создайте группу hq, введите в эту группу созданных пользователей
 
 - Введите в домен машину HQ-CLI
 
@@ -41,7 +41,7 @@
 
 - Пользователи группы hq должны иметь возможность повышать привилегии для выполнения ограниченного набора команд: cat, grep, id. Запускать другие команды с повышенными привилегиями пользователи не имеют права
 
-- Выполните импорт пользователей из файла users.csv. Файл будет располагаться н авиртуальной машине BR-SRV в папке /opt
+- Выполните импорт пользователей из файла users.csv. Файл будет располагаться на виртуальной машине BR-SRV в папке /opt
 
 <br/>
 
@@ -57,7 +57,7 @@
 
 ### Сконфигурируйте файловое хранилище
 
-- При помощи трех дополнительных дисков, размером 1Гб каждый, на HQ-SRV сконфигурируйте дисковый массив уровня 5
+- При помощи трёх дополнительных дисков, размером 1Гб каждый, на HQ-SRV сконфигурируйте дисковый массив уровня 5
 
 - Имя устройства - md0, конфигурация массива размещается в файле /etc/mdadm.conf
 
@@ -320,19 +320,17 @@ df -h
 <summary>Решение</summary>
 <br/>
 
-**Так как на HQ-RTR нет утилиты chrony и возможность выбора стратума, NTP-сервером будет выступать ISP**
-
-#### Конфигурация NTP-сервера (ISP)
+#### Конфигурация NTP-сервера
 
 Скачиваем пакет **chrony**:
-```yml
+```bash
 apt-get install -y chrony
 ```
 
 <br/>
 
 Приводим начало файла **`/etc/chrony.conf`** к следующему виду:
-```yml
+```ini
 # Use public servers from the pool.ntp.org project.
 # Please consider joining the pool (https://www.pool.ntp.org/join.html
 #pool pool.ntp.org iburst
@@ -365,11 +363,11 @@ systemctl enable --now chronyd
 #### Проверка конфигурации NTP-сервера
 
 Получаем вывод источников времени с помощью команды:
-```yml
+```bash
 chronyc sources
 ```
 > Вывод:
-> ```yml
+> ```bash
 > MS Name/IP address        Stratum  Poll  Reach  LastRx  Last  sample
 > =============================================================================
 > ^/ localhost.localdomain  0        8     377    -       +0ns[  +0ns] +/-  0ns
@@ -378,66 +376,29 @@ chronyc sources
 <br/>
 
 Получаем вывод **уровня стратума** с помощью связки команд:
-```yml
+```bash
 chronyc tracking | grep Stratum
 ```
 > Вывод:
-> ```yml
+> ```bash
 > Stratum: 5
 > ```
-
-<br/>
-
-#### Конфигурация NTP-клиента EcoRouter
-
-Указываем IP-адрес **NTP-сервера**:
-```yml
-ntp server 172.16.4.1
-```
-
-<br/>
-
-Указываем часовой пояс:
-```yml
-ntp timezone utc+5
-```
-
-<br/>
-
-#### Проверка конфигурации NTP-клиента EcoRouter
-
-Проверяем командой:
-```yml
-show ntp status
-```
-> Вывод:
-> ```yml
-> Status Description
-> *      best
-> +      sync
-> -      failed
-> ?      unknown
->
-> ----------------------------------------------------------------------------------------------------
-> Status  |  VR name  |  Server  |  Stratum  |  Delay  |  Version  |  Offset  |  Last  |  Source IP
-> ----------------------------------------------------------------------------------------------------
->        *|    default|172.16.4.1|          5|   0.0391|          4|    0.0036|    3:26|        
 
 <br/>
 
 #### Конфигурация NTP-клиента Alt Linux
 
 Скачиваем пакет **chrony**:
-```yml
+```bash
 apt-get install chrony
 ```
 
 <br/>
 
 Приводим начало файла **`/etc/chrony.conf`** к следующему виду:
-```yml
+```bash
 #pool pool.ntp.org iburst
-server 172.16.4.1 iburst prefer
+server 192.168.100.1 iburst prefer
 ```
 > **iburst** - принудительно отправляет пакеты для точности синхронизации
 >
@@ -446,7 +407,7 @@ server 172.16.4.1 iburst prefer
 <br/>
 
 Запускаем утилиту **chrony** и добавляем ее в автозагрузку:
-```yml
+```bash
 systemctl enable --now chronyd
 ```
 
@@ -476,10 +437,11 @@ systemctl enable --now chronyd
 <summary>Решение</summary>
 <br/>
 
+<!--
 #### Конфигурация SSH Alt Linux
 
 Затронутые строки в конфигурационном файле **SSH** **`/etc/openssh/sshd_config`** должны выглядеть следующим образом:
-```yml
+```ini
 Port 2024
 MaxAuthTries 2
 PubkeyAuthentication yes
@@ -494,14 +456,14 @@ AllowUsers  sshuser
 #### Конфигурация Ansible
 
 Устанавливаем необходимые пакеты:
-```yml
+```bash
 apt-get install -y ansible sshpass
 ```
 
 <br/>
 
 Редактируем указанные строки в **конфигурационном файле `/etc/ansible/ansible.cfg`**:
-```yml
+```bash
 inventory = ./inventory.yml
 host_key_checking = False
 ```
@@ -534,7 +496,7 @@ all:
 <br/>
 
 Создаем файлы с переменными для **всех категорий** и для категории **Networking**:
-```yml
+```bash
 cd /etc/ansible
 mkdir group_vars
 touch group_vars/{all.yml,Networking.yml}
@@ -570,6 +532,7 @@ ansible -m ping all
 
 <br/>
 
+-->
 </details>
 
 <br/>
