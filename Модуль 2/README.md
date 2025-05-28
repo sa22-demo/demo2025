@@ -19,8 +19,10 @@
 6. **[На маршрутизаторах сконфигурируйте статическую трансляцию портов](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-6)**
     > Не решено
 7. **[Запустите сервис moodle на сервере HQ-SRV](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-7)**
-8. **[Настройте веб-сервер nginx как обратный прокси-сервер на HQ-RTR]()**
-9. **[Удобным способом установите приложение Яндекс Браузере для организаций на HQ-CLI]()**
+8. **[Настройте веб-сервер nginx как обратный прокси-сервер на HQ-RTR](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-8)**
+    > Не решено
+9. **[Удобным способом установите приложение Яндекс Браузере для организаций на HQ-CLI](https://github.com/sa22-demo/demo2025/tree/main/%D0%9C%D0%BE%D0%B4%D1%83%D0%BB%D1%8C%202#%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-9)**
+    > Не решено
 <br/>
 
 <br/>
@@ -990,7 +992,7 @@ grant all privileges on moodledb.* to moodle@localhost;
 <br/>
 
 <details>
-<summary>Решение</summary>
+<summary>Не решено</summary>
 <br/>
 
 
@@ -1008,7 +1010,7 @@ grant all privileges on moodledb.* to moodle@localhost;
 <br/>
 
 <details>
-<summary>Решение</summary>
+<summary>Не решено</summary>
 <br/>
 
 
