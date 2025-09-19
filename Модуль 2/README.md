@@ -50,7 +50,8 @@
 <br/>
 
 <details>
-<summary>Не решено</summary>
+<summary>Решение</summary>
+    https://docs.google.com/document/d/1gw-aewMqPLfv1nFOYQZU4Svufjf3aajY/edit#heading=h.txn7ulkmze21
 <br/>
 
 </details>
